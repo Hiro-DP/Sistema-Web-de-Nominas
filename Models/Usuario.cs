@@ -5,6 +5,7 @@ namespace Sistema_Web_de_Nominas.Models
     [Table("Usuario")]
     public class Usuario
     {
+        //Sirve cosa vieja
         public int Id { get; set; }
         public string NombreUsuario { get; set; } = string.Empty;
         public string Correo { get; set; } = string.Empty;
