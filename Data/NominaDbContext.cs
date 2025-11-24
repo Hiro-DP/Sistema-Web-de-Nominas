@@ -7,12 +7,15 @@ namespace Sistema_Web_de_Nominas.Data
     {
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Rol> Rol { get; set; }
+        public DbSet<Empleado> Empleado { get; set; }
+        public DbSet<Nomina> Nomina { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Rol>().HasData(
                 new Rol { Id = 1, Nombre = "Admin" },
                 new Rol { Id = 2, Nombre = "Usuario" }
+
             );
 
             base.OnModelCreating(modelBuilder);

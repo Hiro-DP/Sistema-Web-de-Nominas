@@ -11,7 +11,5 @@ namespace Sistema_Web_de_Nominas.Repositorio
         Task DeleteAsync(int codigoId);
         
         Task<IEnumerable<Nomina>> GetNominasByEmpleadoCedulaAsync(string empleadoCedula);
-        
-        Task SaveChangesAsync();
     }
 }

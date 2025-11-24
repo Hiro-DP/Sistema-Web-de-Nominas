@@ -1,4 +1,5 @@
-﻿using Sistema_Web_de_Nominas.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Sistema_Web_de_Nominas.Data;
 using Sistema_Web_de_Nominas.Models;
 
 namespace Sistema_Web_de_Nominas.Repositorio
@@ -11,39 +12,43 @@ namespace Sistema_Web_de_Nominas.Repositorio
             _context = context;
         }
 
-        public Task AddAsync(Empleado empleado)
+        public async Task AddAsync(Empleado empleado)
         {
-            throw new NotImplementedException();
+            await _context.Empleado.AddAsync(empleado);
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(string cedula)
+        public async Task DeleteAsync(string cedula)
         {
-            throw new NotImplementedException();
+            var empleado = await GetByCedulaAsync(cedula);
+            if (empleado != null)
+            {
+                _context.Empleado.Remove(empleado);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public Task<IEnumerable<Empleado>> GetAllAsync()
+        public async Task<IEnumerable<Empleado>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Empleado.ToListAsync();
         }
 
-        public Task<Empleado?> GetByCedulaAsync(string cedula)
+        public async Task<Empleado?> GetByCedulaAsync(string cedula)
         {
-            throw new NotImplementedException();
+            return await _context.Empleado.FirstOrDefaultAsync(e => e.Cedula == cedula);
         }
 
-        public Task<IEnumerable<Empleado>> GetEmpleadosByCargoAsync(string cargo)
+        public async Task<IEnumerable<Empleado>> GetEmpleadosByCargoAsync(string cargo)
         {
-            throw new NotImplementedException();
+            return await _context.Empleado
+                .Where(e => e.Cargo == cargo)
+                .ToListAsync();
         }
 
-        public Task SaveChangesAsync()
+        public async Task UpdateAsync(Empleado empleado)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(Empleado empleado)
-        {
-            throw new NotImplementedException();
+            _context.Empleado.Update(empleado);
+            await _context.SaveChangesAsync();
         }
     }
 }

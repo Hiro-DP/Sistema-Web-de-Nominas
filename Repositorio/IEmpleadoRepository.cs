@@ -13,7 +13,5 @@ namespace Sistema_Web_de_Nominas.Repositorio
         
         Task<IEnumerable<Empleado>> GetEmpleadosByCargoAsync(string cargo);
 
-        
-        Task SaveChangesAsync();
     }
 }
