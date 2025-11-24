@@ -1,0 +1,146 @@
+﻿@{
+    Layout = null; // Eliminamos el layout para esta vista específica
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="~/css/login.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="overlay">
+        <div class="popup-container">
+            <main>
+                <div class="form-container">
+                    <div id="loginForm" class="form active">
+                        <h1>Bienvenido</h1>
+                        <p class="subtitle">Inicie sesión para continuar con su cuenta</p>
+
+                        <form id="signupForm">
+                            <div class="input-group">
+                                <img src="https://api.iconify.design/mdi:email-outline.svg" alt="Email" class="input-icon">
+                                <input type="email" id="email" placeholder="Correo Electronico" required>
+                            </div>
+
+                            <div class="input-group">
+                                <img src="https://api.iconify.design/mdi:lock-outline.svg" alt="Password" class="input-icon">
+                                <input type="password" id="password" placeholder="Contraseña" required>
+                            </div>
+
+                            <div class="remember-forgot">
+                                <label class="remember">
+                                    <input type="checkbox" id="remember">
+                                    <span>Recuérdame</span>
+                                </label>
+                                <a href="#" class="forgot-link" data-form="forgotForm">¿Olvidaste tu contraseña?</a>
+                            </div>
+
+                            <button type="submit" class="signup-btn">Iniciar sesión</button>
+
+                            <p class="login-link">
+                                Don't have an account? <a href="#" class="switch-form" data-form="registerForm">Registrarse</a>
+                            </p>
+                        </form>
+                    </div>
+
+                    <div id="registerForm" class="form">
+                        <h1>Crear Cuenta</h1>
+                        <p class="subtitle">Registrate para comenzar</p>
+
+                        <form id="registerFormElement">
+                            <div class="input-group">
+                                <img src="https://api.iconify.design/mdi:account-outline.svg" alt="UserName" class="input-icon">
+                                <input type="text" id="UserName" placeholder="Nombre" required>
+                            </div>
+
+                            <div class="input-group">
+                                <img src="https://api.iconify.design/mdi:email-outline.svg" alt="Email" class="input-icon">
+                                <input type="email" id="registerEmail" placeholder="Correo Electronico" required>
+                            </div>
+
+                            <div class="input-group">
+                                <img src="https://api.iconify.design/mdi:lock-outline.svg" alt="Password" class="input-icon">
+                                <input type="password" id="registerPassword" placeholder="Contraseña" required>
+                            </div>
+                            <div class="input-group">
+
+                                <select id="UserRole">
+                                    <option value="">Select Role</option>
+                                    <option value="1">Admin</option>
+                                    <option value="2">User</option>
+                                </select>
+
+                            </div>
+                            <div class="input-group">
+                                <img src="https://api.iconify.design/mdi:lock-check-outline.svg" alt="Confirm Password" class="input-icon">
+                                <input type="password" id="confirmPassword" placeholder="Confirmar Contraseña" required>
+                            </div>
+
+                            <button type="submit" class="signup-btn">Crear Cuenta</button>
+
+                            <p class="login-link">
+                                Already have an account? <a href="#" class="switch-form" data-form="loginForm">Iniciar Sesión</a>
+                            </p>
+                        </form>
+                    </div>
+
+                    <div id="forgotForm" class="form">
+                        <h1>Reiniciar Contraseña</h1>
+                        <p class="subtitle">Ingresa tu correo para reiniciar tu contraseña</p>
+
+                        <form id="resetPasswordForm">
+                            <div class="input-group">
+                                <img src="https://api.iconify.design/mdi:email-outline.svg" alt="Email" class="input-icon">
+                                <input type="email" id="resetEmail" placeholder="Correo electronico" required>
+                            </div>
+
+                            <button type="submit" class="signup-btn">Enviar link de reinicio</button>
+
+                            <p class="login-link">
+                                ¿Recordar Contraseña? <a href="#" class="switch-form" data-form="loginForm">Iniciar Sesión</a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/just-validate@4.2.0/dist/just-validate.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @if (TempData["Success"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: '@TempData["Success"]',
+                toast: true,
+                position: 'top-end',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        </script>
+    }
+    else if (TempData["Error"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: '@TempData["Error"]',
+                toast: true,
+                position: 'top-end',
+                timer: 4000,
+                showConfirmButton: false
+            });
+        </script>
+    }
+    <script src="~/js/login.js"></script>
+</body>
+</html>

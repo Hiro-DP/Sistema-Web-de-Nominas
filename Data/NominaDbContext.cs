@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sistema_Web_de_Nominas.Models;
 
-namespace AppAutenticaciones.Data
+namespace Sistema_Web_de_Nominas.Data
 {
-    public class NominaDbContext(DbContextOptions<NominaDbContext> options) : DbContext(options)
+    public class NominaDbContext(DbContextOptions<NominaDbContext> options) : DbContext(options) //agregar sobre Empleado y nomina
     {
         public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Rol> Rol { get; set; }
