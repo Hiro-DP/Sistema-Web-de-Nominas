@@ -21,7 +21,7 @@ namespace Sistema_Web_de_Nominas.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Hubo un error al guardar");
+                return BadRequest(ModelState);
             }
 
             var (success, error) = await _authService.RegisterAsync(dto);

@@ -37,8 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
 
             const data = {
-                Email: document.getElementById("email").value,
-                Password: document.getElementById("password").value
+                Correo: document.getElementById("email").value,
+                Contra: document.getElementById("password").value
             };
 
             try {
@@ -111,9 +111,9 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
 
             const data = {
-                Username: document.getElementById("UserName").value,
-                Email: document.getElementById("registerEmail").value,
-                Password: document.getElementById("registerPassword").value
+                Usuario: document.getElementById("UserName").value,
+                Correo: document.getElementById("registerEmail").value,
+                Contra: document.getElementById("registerPassword").value
             };
 
             try {
@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
 
             const data = {
-                Email: document.getElementById("resetEmail").value,
+                Correo: document.getElementById("resetEmail").value,
             };
 
             try {

@@ -113,7 +113,7 @@ namespace Sistema_Web_de_Nominas.Services
 
             await _userRepo.AddAsync(user);
             await _userRepo.SaveAsync();
-            string confirmationLink = $"https://localhost:7130/Auth/ConfirmEmail?email={user.Correo}&token={encodedToken}";
+            string confirmationLink = $"https://localhost:7168/Auth/ConfirmEmail?email={user.Correo}&token={encodedToken}";
 
             string htmlBody = $"""
                             <!DOCTYPE html>
@@ -142,7 +142,7 @@ namespace Sistema_Web_de_Nominas.Services
 
             await _userRepo.SaveAsync();
 
-            string confirmationLink = $"https://localhost:7130/Auth/ConfirmEmail?email={user.Correo}&token={encodedToken}"; //ver bien del puerto en el local host
+            string confirmationLink = $"https://localhost:7168/Auth/ConfirmEmail?email={user.Correo}&token={encodedToken}"; //ver bien del puerto en el local host
 
             string htmlBody = $"""
                             <!DOCTYPE html>
@@ -199,7 +199,7 @@ namespace Sistema_Web_de_Nominas.Services
             user.ContraRecargaToken = token;
             user.ReincioTokenExpirado = DateTime.UtcNow.AddHours(1);
             await _userRepo.SaveAsync();
-            string resetLink = $"https://localhost:7130/Auth/ResetPassword?email={user.Correo}&token={encodedToken}";
+            string resetLink = $"https://localhost:7168/Auth/ResetPassword?email={user.Correo}&token={encodedToken}";
             string htmlBody = $"""
                             <!DOCTYPE html>
                             <html><body>

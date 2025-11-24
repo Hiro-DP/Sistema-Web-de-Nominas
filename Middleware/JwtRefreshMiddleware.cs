@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using Sistema_Web_de_Nominas.Services;
 
-namespace AuthenticationApp.Middleware
+namespace Sistema_Web_de_Nominas.Middleware
 {
     public class JwtRefreshMiddleware(RequestDelegate next)
     {
