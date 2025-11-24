@@ -43,6 +43,7 @@ namespace Sistema_Web_de_Nominas.Controllers
         }
         [HttpPost]
         [AllowAnonymous]
+        //bp
         public async Task<IActionResult> Login([FromBody] PeticionLoginDto dto)
         {
             if (!ModelState.IsValid)
@@ -70,10 +71,11 @@ namespace Sistema_Web_de_Nominas.Controllers
         [HttpPost]
         public IActionResult Logout()
         {
+
             Response.Cookies.Delete("access_token");
             Response.Cookies.Delete("refresh_token");
 
-            return RedirectToAction("Index", "Home");
+            return Json(new { success = true, message = "Sesión cerrada correctamente" });
         }
         //CONFIGURACION CORREO
         [HttpGet]

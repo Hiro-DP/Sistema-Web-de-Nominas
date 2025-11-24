@@ -94,6 +94,7 @@ namespace Sistema_Web_de_Nominas.Services
 
         }
 
+        //bp
         public async Task<(bool Success, string? ErrorMessage)> RegisterAsync(PeticionRegistroDto dto)
         {
             var exists = await _userRepo.GetUserByEmail(dto.Correo);

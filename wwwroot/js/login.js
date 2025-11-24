@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
 
             const data = {
-                Usuario: document.getElementById("UserName").value,
+                NombreUsuario: document.getElementById("UserName").value,
                 Correo: document.getElementById("registerEmail").value,
                 Contra: document.getElementById("registerPassword").value
             };

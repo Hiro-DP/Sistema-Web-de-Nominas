@@ -9,7 +9,7 @@
     --primary: #67733C;
     --accent: #A2A644;
     --text: #18171C;
-    --bg: #F6F6F6;
+    --bg: #737860;
     --white: #F8F8FF;
     --border: #E8E8E8;
 }
@@ -97,7 +97,7 @@ h1 {
 }
 
 .subtitle {
-    color: #666;
+    color: #18171C;
     margin-bottom: 2rem;
     font-size: .95rem;
 }
@@ -184,7 +184,7 @@ select {
     border: none;
     border-radius: 8px;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
     transition: .3s;
 }
@@ -328,5 +328,5 @@ select {
 
 .form-container {
     position: relative;
-    min-height: 400px;
+    min-height: 300px;
 }

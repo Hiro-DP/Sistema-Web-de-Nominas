@@ -30,9 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
 
             const data = {
-                Email: document.getElementById("email").value,
+                Correo: document.getElementById("email").value,
                 Token: document.getElementById("token").value,
-                NewPassword: document.getElementById("newPassword").value
+                NuevaContra: document.getElementById("newPassword").value
             };
 
             try {
