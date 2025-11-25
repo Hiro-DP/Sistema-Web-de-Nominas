@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Sistema_Web_de_Nominas.Dto.NominaResponseDTO>
+@{
+    // Define el título de la página
+    ViewData["Title"] = "Gestión de Nóminas";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>@ViewData["Title"]</h2>
+        @if (User.IsInRole("Admin"))
+        {
+            <button type="button" class="btn btn-success" onclick="OpenModal('/Nomina/Create')">
+                <i class="bi bi-cash-stack"></i> Nueva Nómina
+            </button>
+        }
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover" id="nominasTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cédula Empleado</th>
+                    <th>Salario Base</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var nomina in Model)
+                {
+                    <tr data-id="@nomina.CodigoId">
+                        <td>@nomina.CodigoId</td>
+                        <td>@nomina.EmpleadoCedula</td>
+                        <td>@nomina.Salario.ToString("C")</td>
+
+                        <td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a onclick="OpenModal('/Nomina/Edit?codigoId=@nomina.CodigoId')" class="btn btn-warning btn-sm mx-1">
+                                    <i class="fa fa-pencil"></i> Editar
+                                </a>
+                                <button class="btn btn-danger btn-sm" onclick="eliminarNomina(@nomina.CodigoId)">
+                                    <i class="fa fa-trash"></i> Eliminar
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="modalContainer" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="modalContent">
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("_MostrarModal")
+@section Scripts {
+    <script src="~/js/show-modal.js"></script>
+}

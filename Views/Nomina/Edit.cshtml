@@ -1,0 +1,55 @@
+﻿@model Sistema_Web_de_Nominas.Dto.NominaRequestDTO
+@using Sistema_Web_de_Nominas.Dto
+@{
+	Layout = null;
+	var empleados = ViewBag.Empleados as IEnumerable<EmpleadoResponseDTO> ?? new List<EmpleadoResponseDTO>();
+	int codigoId = (int)ViewData["CodigoId"];
+}
+
+<form id="crudForm" data-action="Edit">
+	<div class="modal-header">
+		<h5 class="modal-title">Editar Nómina (@codigoId)</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	</div>
+	<div class="modal-body">
+		<input type="hidden" name="CodigoId" value="@codigoId" />
+
+		<div class="form-group mb-3">
+			<label class="form-label">ID de Nómina (No editable)</label>
+			<input type="text" class="form-control" value="@codigoId" readonly />
+		</div>
+
+		<div class="form-group mb-3">
+			<label asp-for="EmpleadoCedula" class="form-label">Empleado</label>
+			<select asp-for="EmpleadoCedula" class="form-select" disabled>
+				@foreach (var emp in empleados)
+				{
+					<option value="@emp.Cedula" selected="@(emp.Cedula == Model.EmpleadoCedula)">@emp.NombreCompleto (@emp.Cedula)</option>
+				}
+			</select>
+			<input type="hidden" asp-for="EmpleadoCedula" />
+		</div>
+
+		<div class="form-group mb-3">
+			<label asp-for="Salario" class="form-label">Salario Base</label>
+			<input asp-for="Salario" type="number" step="0.01" class="form-control" />
+			<span asp-validation-for="Salario" class="text-danger"></span>
+		</div>
+
+		<div class="form-group mb-3">
+			<label asp-for="HorasExtras" class="form-label">Horas Extras</label>
+			<input asp-for="HorasExtras" type="number" class="form-control" />
+			<span asp-validation-for="HorasExtras" class="text-danger"></span>
+		</div>
+
+		<div class="form-group mb-3">
+			<label asp-for="Inasistencia" class="form-label">Días de Inasistencia</label>
+			<input asp-for="Inasistencia" type="number" class="form-control" />
+			<span asp-validation-for="Inasistencia" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+		<button type="submit" class="btn btn-primary">Guardar Cambios</button>
+	</div>
+</form>
