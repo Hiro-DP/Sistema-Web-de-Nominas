@@ -1,0 +1,52 @@
+﻿@model Sistema_Web_de_Nominas.Dto.NominaResponseDTO
+@{
+    ViewData["Title"] = "Detalles de Nómina";
+}
+
+<h1>Detalles de Nómina #@Model.CodigoId</h1>
+<hr />
+
+<div class="card shadow">
+    <div class="card-body">
+        <h4 class="card-title">Resumen de Cálculo</h4>
+        <dl class="row">
+            <dt class="col-sm-4">Empleado Cédula</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.EmpleadoCedula)</dd>
+
+            <dt class="col-sm-4">Salario Base</dt>
+            <dd class="col-sm-8 text-success"><strong>@Model.Salario.ToString("C2")</strong></dd>
+
+            <dt class="col-sm-4">Horas Extras</dt>
+            <dd class="col-sm-8">@Html.DisplayFor(model => model.HorasExtras)</dd>
+
+            <dt class="col-sm-4">Monto Horas Extras</dt>
+            <dd class="col-sm-8">@Model.MontoDeHorasExtras.ToString("C2")</dd>
+        </dl>
+
+        <h5 class="mt-4">Devengado (Ingresos Brutos)</h5>
+        <dl class="row bg-light p-2 rounded">
+            <dt class="col-sm-4">Devengado Total</dt>
+            <dd class="col-sm-8"><strong>@Model.Devengado.ToString("C2")</strong></dd>
+        </dl>
+
+        <h5 class="mt-4 text-danger">Deducciones</h5>
+        <dl class="row">
+            <dt class="col-sm-4">INSS Laboral (7%)</dt>
+            <dd class="col-sm-8">@Model.INSSLaboral.ToString("C2")</dd>
+
+            <dt class="col-sm-4">Otras Deducciones/Impuestos</dt>
+            <dd class="col-sm-8">@(Model.MontoDeducciones - Model.INSSLaboral).ToString("C2")</dd>
+
+            <dt class="col-sm-4">Total Deducciones</dt>
+            <dd class="col-sm-8 text-danger"><strong>@Model.MontoDeducciones.ToString("C2")</strong></dd>
+        </dl>
+
+        <h3 class="mt-4">Salario Neto (A Pagar)</h3>
+        <p class="h3 text-primary">@Model.SalarioNeto.ToString("C2")</p>
+    </div>
+</div>
+
+<hr />
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Volver al Historial</a>
+</div>

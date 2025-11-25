@@ -1,0 +1,28 @@
+﻿@model Sistema_Web_de_Nominas.Dto.EmpleadoResponseDTO
+@{
+    ViewData["Title"] = "Eliminar Empleado";
+}
+
+<h1>Eliminar Empleado</h1>
+<h3 class="text-danger">¿Está seguro de que desea eliminar a este empleado?</h3>
+<hr />
+
+<div>
+    <h4>**Esta acción no se puede deshacer.**</h4>
+    <dl class="row">
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Cedula)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Cedula)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.NombreCompleto)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.NombreCompleto)</dd>
+
+        <dt class="col-sm-3">@Html.DisplayNameFor(model => model.Cargo)</dt>
+        <dd class="col-sm-9">@Html.DisplayFor(model => model.Cargo)</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" name="cedula" value="@Model.Cedula" />
+        <input type="submit" value="Eliminar" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

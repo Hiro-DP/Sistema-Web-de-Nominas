@@ -1,0 +1,47 @@
+﻿@using static Sistema_Web_de_Nominas.Controllers.NominaController
+@model CalculoNominaViewModel
+@{
+    ViewData["Title"] = "Calcular Nómina";
+}
+
+<h1>Calcular Nómina</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Calculate" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="NominaData.EmpleadoCedula" class="form-label">Empleado</label>
+                <select asp-for="NominaData.EmpleadoCedula" class="form-control" required>
+                    <option value="">-- Seleccionar Empleado --</option>
+                    @foreach (var empleado in Model.Empleados)
+                    {
+                        <option value="@empleado.Cedula">@empleado.NombreCompleto (@empleado.Cedula)</option>
+                    }
+                </select>
+                <span asp-validation-for="NominaData.EmpleadoCedula" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NominaData.Salario" class="form-label">Salario Base Mensual</label>
+                <input asp-for="NominaData.Salario" type="number" step="0.01" class="form-control" required />
+                <span asp-validation-for="NominaData.Salario" class="text-danger"></span>
+            </div>
+
+           
+
+            <div class="form-group">
+                <input type="submit" value="Generar Nómina" class="btn btn-success" />
+                <a asp-action="Index" class="btn btn-secondary">Volver al Historial</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
