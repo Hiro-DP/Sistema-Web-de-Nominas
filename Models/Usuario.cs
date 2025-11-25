@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sistema_Web_de_Nominas.Models
 {
@@ -20,5 +21,9 @@ namespace Sistema_Web_de_Nominas.Models
         public DateTime? ReincioTokenExpirado { get; set; }
         public int RolId { get; set; }
         public virtual Rol Rol { get; set; }
+
+        public Collection<Empleado> Empleados { get; set; }
+
+        // Tengo hambre (￣o￣) . z Z
     }
 }

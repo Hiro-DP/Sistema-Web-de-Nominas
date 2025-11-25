@@ -27,5 +27,9 @@ namespace Sistema_Web_de_Nominas.Models
         [StringLength(50)]
         public string Cargo { get; set; } = string.Empty;
 
-    }
+        public virtual ICollection<Nomina> Nominas { get; set; } = new List<Nomina>();
+
+        public virtual Usuario? Usuario { get; set; }
+
+        }
 }
