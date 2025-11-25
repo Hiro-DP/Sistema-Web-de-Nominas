@@ -1,11 +1,13 @@
-﻿using Sistema_Web_de_Nominas.Dto;
+﻿using System.Threading.Tasks;
+using Sistema_Web_de_Nominas.Dto;
 using Sistema_Web_de_Nominas.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 namespace Sistema_Web_de_Nominas.Controllers
 {
-    [Authorize] 
+    [Authorize(Roles = "Admin")]
     public class EmpleadoController(IEmpleadoService empleadoService) : Controller
     {
         private readonly IEmpleadoService _empleadoService = empleadoService;
@@ -13,55 +15,62 @@ namespace Sistema_Web_de_Nominas.Controllers
         public async Task<IActionResult> Index()
         {
             var empleados = await _empleadoService.GetAllEmpleadosAsync();
-            return View(empleados); 
+            return View(empleados);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Details(string cedula)
         {
             var empleado = await _empleadoService.GetEmpleadoByCedulaAsync(cedula);
             if (empleado == null)
             {
-                TempData["Error"] = $"Empleado con cédula {cedula} no encontrado.";
-                return RedirectToAction(nameof(Index));
+                return NotFound($"Empleado con cédula {cedula} no encontrado.");
             }
             return View(empleado);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
-            return View(new EmpleadoRequestDTO());
+            return View();
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(EmpleadoRequestDTO dto)
+        public async Task<IActionResult> Create([FromBody] EmpleadoRequestDTO empleadoDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    await _empleadoService.AddEmpleadoAsync(dto);
-                    TempData["Success"] = "Empleado creado exitosamente.";
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (InvalidOperationException ex)
-                {
-                    ModelState.AddModelError("Cedula", ex.Message);
-                }
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                return BadRequest(new { errors });
             }
-            return View(dto);
+
+            try
+            {
+                var empleadoCreado = await _empleadoService.AddEmpleadoAsync(empleadoDto);
+                return Ok(empleadoCreado);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "Error al crear el empleado", detalle = ex.Message });
+            }
         }
 
+        [HttpGet]
         public async Task<IActionResult> Edit(string cedula)
         {
             var empleado = await _empleadoService.GetEmpleadoByCedulaAsync(cedula);
             if (empleado == null)
             {
-                TempData["Error"] = $"Empleado con cédula {cedula} no encontrado.";
-                return RedirectToAction(nameof(Index));
+                return NotFound($"Empleado con cédula {cedula} no encontrado.");
             }
-
-            var requestDto = new EmpleadoRequestDTO
+            var editDto = new EmpleadoRequestDTO
             {
                 Cedula = empleado.Cedula,
                 NombreCompleto = empleado.NombreCompleto,
@@ -69,55 +78,51 @@ namespace Sistema_Web_de_Nominas.Controllers
                 Sexo = empleado.Sexo,
                 Cargo = empleado.Cargo
             };
-            return View(requestDto);
+            return View(editDto);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string cedula, EmpleadoRequestDTO dto)
+        public async Task<IActionResult> Edit(string cedula, [FromBody] EmpleadoRequestDTO empleadoDto)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    await _empleadoService.UpdateEmpleadoAsync(cedula, dto);
-                    TempData["Success"] = "Empleado actualizado exitosamente.";
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (KeyNotFoundException)
-                {
-                    TempData["Error"] = $"Empleado con cédula {cedula} no encontrado.";
-                    return RedirectToAction(nameof(Index));
-                }
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+                return BadRequest(new { errors });
             }
-            return View(dto);
+
+            try
+            {
+                var empleadoActualizado = await _empleadoService.UpdateEmpleadoAsync(cedula, empleadoDto);
+                return Ok(empleadoActualizado);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = "Error al actualizar el empleado", detalle = ex.Message });
+            }
         }
 
+        [HttpPost]
         public async Task<IActionResult> Delete(string cedula)
-        {
-            var empleado = await _empleadoService.GetEmpleadoByCedulaAsync(cedula);
-            if (empleado == null)
-            {
-                TempData["Error"] = $"Empleado con cédula {cedula} no encontrado.";
-                return RedirectToAction(nameof(Index));
-            }
-            return View(empleado); 
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string cedula)
         {
             try
             {
                 await _empleadoService.DeleteEmpleadoAsync(cedula);
-                TempData["Success"] = "Empleado eliminado exitosamente.";
-                return RedirectToAction(nameof(Index));
+                return Ok(new { success = true, message = $"Empleado con cédula {cedula} eliminado correctamente." });
             }
-            catch (KeyNotFoundException)
+            catch (KeyNotFoundException ex)
             {
-                TempData["Error"] = $"Error al eliminar: Empleado con cédula {cedula} no encontrado.";
-                return RedirectToAction(nameof(Index));
+                return NotFound(new { success = false, error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, error = "Error al eliminar el empleado", detalle = ex.Message });
             }
         }
     }
