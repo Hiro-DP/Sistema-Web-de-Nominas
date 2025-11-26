@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Sistema_Web_de_Nominas.Dto;
 using Sistema_Web_de_Nominas.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Sistema_Web_de_Nominas.Controllers
 {
@@ -13,9 +14,42 @@ namespace Sistema_Web_de_Nominas.Controllers
         private readonly INominaService _nominaService = nominaService;
         private readonly IEmpleadoService _empleadoService = empleadoService;
 
+        // public async Task<IActionResult> Index()
+        //{
+        //     var nominas = await _nominaService.GetAllNominasAsync();
+        //     return View(nominas);
+        // }
+
         public async Task<IActionResult> Index()
         {
-            var nominas = await _nominaService.GetAllNominasAsync();
+            var esAdmin = User.IsInRole("Admin");
+            IEnumerable<NominaResponseDTO> nominas;
+            string? cedulaUsuario = null; // Para usar en la vista, si se desea
+
+            if (esAdmin)
+            {
+                // El administrador ve todas las nóminas
+                nominas = await _nominaService.GetAllNominasAsync();
+            }
+            else // Es un usuario normal ("Usuario")
+            {
+                // 1. Obtener la cédula del Claim. Asumimos que el Claim se llama 'Cedula' o 'nameidentifier'.
+                cedulaUsuario = User.FindFirst("Cedula")?.Value ??
+                                User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(cedulaUsuario))
+                {
+                    // Si no tiene cédula, no puede ver nada (Error de configuración de seguridad)
+                    return Unauthorized("No se pudo identificar la Cédula del empleado en la sesión.");
+                }
+
+                // 2. Filtrar las nóminas solo por su cédula
+                nominas = await _nominaService.GetNominasPorEmpleadoAsync(cedulaUsuario);
+            }
+
+            // 3. Pasar la cédula a la vista 
+            ViewData["CedulaUsuario"] = cedulaUsuario;
+
             return View(nominas);
         }
 
