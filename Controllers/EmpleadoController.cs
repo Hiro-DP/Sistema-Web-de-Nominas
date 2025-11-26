@@ -1,16 +1,19 @@
-﻿using System.Threading.Tasks;
-using Sistema_Web_de_Nominas.Dto;
-using Sistema_Web_de_Nominas.Services;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
+using Sistema_Web_de_Nominas.Dto;
+using Sistema_Web_de_Nominas.Models;
+using Sistema_Web_de_Nominas.Services;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Sistema_Web_de_Nominas.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class EmpleadoController(IEmpleadoService empleadoService) : Controller
+    public class EmpleadoController(IEmpleadoService empleadoService, IAuthService usuarioService) : Controller
+
     {
         private readonly IEmpleadoService _empleadoService = empleadoService;
+        private readonly IAuthService _usuarioService = usuarioService; // Asignar el servicio de usuarios
 
         public async Task<IActionResult> Index()
         {
@@ -30,8 +33,9 @@ namespace Sistema_Web_de_Nominas.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewBag.Usuarios = await _usuarioService.GetAllUsuariosAsync();
             return View();
         }
 
@@ -70,14 +74,19 @@ namespace Sistema_Web_de_Nominas.Controllers
             {
                 return NotFound($"Empleado con cédula {cedula} no encontrado.");
             }
+            var usuarios = await _usuarioService.GetAllUsuariosAsync();
+            ViewBag.Usuarios = usuarios;
+
             var editDto = new EmpleadoRequestDTO
             {
                 Cedula = empleado.Cedula,
                 NombreCompleto = empleado.NombreCompleto,
                 Telefono = empleado.Telefono,
                 Sexo = empleado.Sexo,
-                Cargo = empleado.Cargo
+                Cargo = empleado.Cargo,
+                UsuarioId = empleado.UsuarioId
             };
+
             return View(editDto);
         }
 

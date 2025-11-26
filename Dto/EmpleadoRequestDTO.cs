@@ -21,5 +21,7 @@ namespace Sistema_Web_de_Nominas.Dto
         [Required(ErrorMessage = "El cargo es obligatorio.")]
         [StringLength(50)]
         public string Cargo { get; set; } = string.Empty;
+
+        public int? UsuarioId { get; set; }
     }
 }

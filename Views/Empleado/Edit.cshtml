@@ -1,6 +1,9 @@
-﻿@model Sistema_Web_de_Nominas.Dto.EmpleadoRequestDTO
+﻿@using Sistema_Web_de_Nominas.Dto
+@model Sistema_Web_de_Nominas.Dto.EmpleadoRequestDTO
 @{
 	Layout = null;
+	var usuarios = ViewBag.Usuarios as IEnumerable<UsuarioDto> ?? new List<UsuarioDto>();
+
 }
 
 <form id="crudForm" data-action="Edit">
@@ -14,7 +17,20 @@
 			<input asp-for="Cedula" class="form-control" readonly />
 		</div>
 		<input type="hidden" asp-for="Cedula" />
-
+		<div class="form-group mb-3">
+			<label asp-for="UsuarioId" class="form-label">Usuario (Opcional)</label>
+			<select asp-for="UsuarioId" class="form-select">
+				<option value="">Seleccione un usuario para vincular...</option>
+				@if (usuarios.Any())
+				{
+					@foreach (var user in usuarios)
+					{
+						<option value="@user.Id">@user.NombreUsuario (@user.Id)</option>
+					}
+				}
+			</select>
+			<span asp-validation-for="UsuarioId" class="text-danger"></span>
+		</div>
 		<div class="form-group mb-3">
 			<label asp-for="NombreCompleto" class="form-label"></label>
 			<input asp-for="NombreCompleto" class="form-control" />

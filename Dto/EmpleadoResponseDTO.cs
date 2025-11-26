@@ -11,5 +11,7 @@
         public string Sexo { get; set; } = string.Empty;
 
         public string Cargo { get; set; } = string.Empty;
+
+        public int? UsuarioId { get; set; }
     }
 }
