@@ -4,6 +4,8 @@ namespace Sistema_Web_de_Nominas.Dto
 {
     public class NominaRequestDTO
     {
+        public int CodigoId { get; set; }
+
         [Required(ErrorMessage = "El salario base es obligatorio.")]
         public decimal Salario { get; set; }
 

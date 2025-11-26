@@ -3,20 +3,21 @@
 @{
 	Layout = null;
 	var empleados = ViewBag.Empleados as IEnumerable<EmpleadoResponseDTO> ?? new List<EmpleadoResponseDTO>();
-	int codigoId = (ViewData["CodigoId"] as int?) ?? 0;
+	//int codigoId = (ViewData["CodigoId"] as int?) ?? 0;
+
 }
 
 <form id="crudForm" data-action="Edit">
 	<div class="modal-header">
-		<h5 class="modal-title">Editar Nómina (@codigoId)</h5>
+		<h5 class="modal-title">Editar Nómina (@Model.CodigoId)</h5>
 		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	</div>
 	<div class="modal-body">
-		<input type="hidden" name="CodigoId" value="@codigoId" />
+		<input type="hidden" name="CodigoId" value="@Model.CodigoId" />
 
 		<div class="form-group mb-3">
 			<label class="form-label">ID de Nómina (No editable)</label>
-			<input type="text" class="form-control" value="@codigoId" readonly />
+			<input type="text" class="form-control" value="@Model.CodigoId" readonly />
 		</div>
 
 		<div class="form-group mb-3">
