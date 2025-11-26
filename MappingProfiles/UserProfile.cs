@@ -8,6 +8,21 @@ namespace Sistema_Web_de_Nominas.MappingProfiles
     {
         public UserProfile()
         {
+
+            CreateMap<Usuario, UsuarioDto>();
+
+            
+            CreateMap<UsuarioDto, Usuario>()
+                .ForMember(dest => dest.Correo, opt => opt.Ignore()) 
+                .ForMember(dest => dest.Contra, opt => opt.Ignore())
+                .ForMember(dest => dest.CorreoConfirmacion, opt => opt.Ignore())
+                .ForMember(dest => dest.CorreoConfirmacionToken, opt => opt.Ignore())
+                .ForMember(dest => dest.RecargaToken, opt => opt.Ignore())
+                .ForMember(dest => dest.RecargaTokenExpirado, opt => opt.Ignore())
+                .ForMember(dest => dest.ContraRecargaToken, opt => opt.Ignore())
+                .ForMember(dest => dest.ReincioTokenExpirado, opt => opt.Ignore())
+                .ForMember(dest => dest.Rol, opt => opt.Ignore());
+            
             CreateMap<Usuario, RespuestaLoginDto>()
                 .ForMember(dest => dest.TokenAcceso, opt => opt.Ignore())
                 .ForMember(dest => dest.TokenActualizacion, opt => opt.Ignore())

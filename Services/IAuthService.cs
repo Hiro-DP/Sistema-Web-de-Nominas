@@ -6,6 +6,9 @@ namespace Sistema_Web_de_Nominas.Services
     {
         Task<(bool Success, string? ErrorMessage)> RegisterAsync(PeticionRegistroDto dto);
         Task<(bool Success, RespuestaLoginDto? Result, string? ErrorMessage)> LoginAsync(PeticionLoginDto dto);
+        Task<IEnumerable<UsuarioDto>> GetAllUsuariosAsync();
+        Task<UsuarioDto?> GetUsuarioById(int id);
+        Task<UsuarioDto> UpdateUsuario(UsuarioDto dto);
         Task<bool> ConfirmEmailAsync(string correo, string token);
         Task<bool> SendResetPasswordLinkAsync(string correo);
         Task<bool> ResetPasswordAsync(PeticionReinicioContraDto dto);

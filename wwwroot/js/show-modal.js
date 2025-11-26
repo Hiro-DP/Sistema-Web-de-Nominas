@@ -1,5 +1,6 @@
 ﻿let empleadoDataTable;
 let nominaDataTable;
+let usuarioDataTable;
 
 $(function () {
     if ($('#empleadosTable').length) {
@@ -17,8 +18,15 @@ $(function () {
             }
         });
     }
-});
 
+    if ($('#usuarioTable').length) {
+        usuarioDataTable = $('#usuarioTable').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            }
+        });
+    }
+});
 
 
 function refrescarDataTable() { }
@@ -116,7 +124,6 @@ async function eliminarNomina(codigoId) {
 }
 
 
-
 async function bindFormHandler() {
     const form = document.getElementById('crudForm');
 
@@ -181,6 +188,23 @@ async function bindFormHandler() {
             { rule: 'required', errorMessage: 'Campo obligatorio.' },
             { rule: 'minNumber', value: 0, errorMessage: 'Debe ser un valor positivo o cero.' }
         ]);
+    } else if (controller.toLowerCase() === 'auth') {
+        const id = form.querySelector('[name="Id"]').value;
+        url = action === 'Create' ? `/Auth/Create` : `/Auth/Edit?Id=${id}`;
+        isEdit = action === 'Edit';
+
+        validator.addField('[name="NombreUsuario"]', [
+            { rule: 'required', errorMessage: 'El nombre de usuario es obligatorio.' },
+            { rule: 'minLength', value: 3, errorMessage: 'Mínimo 3 caracteres.' }
+        ]);
+        validator.addField('[name="Correo"]', [
+            { rule: 'required', errorMessage: 'El correo es obligatorio.' },
+            { rule: 'email', errorMessage: 'El formato de correo no es válido.' }
+            ]);
+        validator.addField('[name="RolId"]', [
+            { rule: 'required', errorMessage: 'Debe seleccionar un rol.' }
+        ]);
+
     } else {
         return;
     }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sistema_Web_de_Nominas.Dto;
 using Sistema_Web_de_Nominas.Models;
 using Sistema_Web_de_Nominas.Services;
+using System.Threading;
 
 namespace Sistema_Web_de_Nominas.Services
 {
@@ -43,6 +44,19 @@ namespace Sistema_Web_de_Nominas.Services
             await _userRepo.SaveAsync();
 
             return true;
+        }
+
+        //Para la vista solo para usuario normal
+        public async Task<IEnumerable<UsuarioDto>> GetAllUsuariosAsync()
+        {
+            var usuarios = await _userRepo.GetAllAsync();
+            return _mapper.Map<IEnumerable<UsuarioDto>>(usuarios);
+        }
+
+        public async Task<UsuarioDto?> GetUsuarioById(int id)
+        {
+            var usuario = await _userRepo.GetUsuarioById(id);
+            return _mapper.Map<UsuarioDto?>(usuario);
         }
 
         public async Task<(bool Success, RespuestaLoginDto? Result, string? ErrorMessage)> LoginAsync(PeticionLoginDto dto)
@@ -176,16 +190,11 @@ namespace Sistema_Web_de_Nominas.Services
                 return false;
             }
 
-            Console.WriteLine("TOKEN GUARDADO   : " + storedToken);
-            Console.WriteLine("TOKEN RECIBIDO   : " + providedToken);
-            Console.WriteLine("COINCIDEN?       : " + storedToken.Equals(providedToken, StringComparison.Ordinal));
-
-            // Verificar expiración
             if (!user.ReincioTokenExpirado.HasValue || user.ReincioTokenExpirado.Value < DateTime.Now)
             {
                 return false;
             }
-
+            
             user.Contra = BCrypt.Net.BCrypt.EnhancedHashPassword(dto.NuevaContra);
             user.ContraRecargaToken = null;
             user.ReincioTokenExpirado = null;
@@ -196,14 +205,16 @@ namespace Sistema_Web_de_Nominas.Services
 
         public async Task<bool> SendResetPasswordLinkAsync(string correo)
         {
+
             var user = await _userRepo.GetUserByEmail(correo);
             if (user == null) return false;
-
+   
             var token = _tokenService.GenerarTokenReinicioContra();
             var encodedToken = Uri.EscapeDataString(token);
             user.ContraRecargaToken = token;
             user.ReincioTokenExpirado = DateTime.UtcNow.AddHours(1);
             await _userRepo.SaveAsync();
+
             string resetLink = $"https://localhost:7168/Auth/ResetPassword?email={user.Correo}&token={encodedToken}";
             string htmlBody = $"""
                             <!DOCTYPE html>
@@ -215,6 +226,25 @@ namespace Sistema_Web_de_Nominas.Services
                             """;
             _emailService.EnvioCorreoReinicioContra(user.Correo, htmlBody);
             return true;
+            
+        }
+
+
+
+        public async Task<UsuarioDto> UpdateUsuario(UsuarioDto dto)
+        {
+            var usuario= await _userRepo.GetUsuarioById(dto.Id);
+
+            if (usuario == null)
+            {
+                return null;
+            }
+            _mapper.Map(dto, usuario);
+
+            var usuarioActualizado = await _userRepo.UpdateUsuario(usuario);
+
+            // 4. Retornar el DTO mapeado
+            return _mapper.Map<UsuarioDto>(usuarioActualizado);
         }
     }
 }

@@ -3,16 +3,21 @@ using Sistema_Web_de_Nominas.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Threading;
 
 namespace Sistema_Web_de_Nominas.Controllers
 {
+
     public class AuthController(IAuthService authService) : Controller
     {
+        //PONER PARA EL EDIT
         private readonly IAuthService _authService = authService;
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var usuarios = await _authService.GetAllUsuariosAsync();
+            return View(usuarios);
         }
 
         [HttpGet]
@@ -100,6 +105,34 @@ namespace Sistema_Web_de_Nominas.Controllers
             return RedirectToAction("Login");
         }
 
+        //EDITAR ROL
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var usuario = await _authService.GetUsuarioById(id);
+
+            if (usuario == null)
+            {
+                return NotFound($"usuario no encontrada {id}");
+            }
+            return View(usuario);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([FromBody] UsuarioDto usuario)
+        {
+            if ((!ModelState.IsValid))
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return BadRequest(new { errors });
+            }
+            var tareaActualizada = await _authService.UpdateUsuario(usuario);
+            return Ok(tareaActualizada);
+        }
+
         //RECUPERAR CONTRASEÑA
 
         [HttpGet]
@@ -177,8 +210,6 @@ namespace Sistema_Web_de_Nominas.Controllers
             ModelState.AddModelError("", "Contraseña actual incorrecta.");
             return View(dto);
         }
-
-
 
 
         [HttpPost]

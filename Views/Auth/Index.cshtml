@@ -1,6 +1,45 @@
-﻿@model IEnumerable<Sistema_Web_de_Nominas.Dto.PeticionRegistroDto>
+﻿@model IEnumerable<Sistema_Web_de_Nominas.Dto.UsuarioDto>
+
 @{
-    ViewData["Title"] = "Gestión de usuarios";
+    ViewData["Title"] = "Gestion de usuarios";
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover" id="usuarioTable">
+            <thead>
+                <tr>
+                    <th>Nombre de usuario</th>
+                    <th>Correo</th>
+                    <th>Rol Id</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var usuario in Model)
+                {
+                    <tr data-cedula="@usuario.Id">
+                        <td>@usuario.NombreUsuario</td>
+                        <td>@usuario.Correo</td>
+                        <td>@usuario.RolId</td>
+                        <td>
+                            <a onclick="OpenModal('/Auth/Edit?Id=@usuario.Id')" class="btn btn-warning btn-sm mx-1">
+                                <i class="fa fa-pencil"></i> Editar
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@await Html.PartialAsync("_MostrarModal")
+
+@section Scripts {
+    <script src="~/js/show-modal.js"></script>
+}

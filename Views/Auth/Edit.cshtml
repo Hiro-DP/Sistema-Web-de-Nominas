@@ -1,0 +1,40 @@
+﻿@model Sistema_Web_de_Nominas.Dto.UsuarioDto
+@{
+	Layout = null;
+}
+
+<form id="crudForm" data-action="Edit">
+	<div class="modal-header">
+		<h5 class="modal-title">Editar Usuario (@Model.Id)</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	</div>
+	<div class="modal-body">
+
+		<div class="form-group mb-3">
+
+			<input type="hidden" asp-for="Id" />
+
+			<label asp-for="NombreUsuario" class="form-label"></label>
+			<input asp-for="NombreUsuario" class="form-control" />
+			<span asp-validation-for="NombreUsuario" class="text-danger"></span>
+		</div>
+		<div class="form-group mb-3">
+			<label asp-for="Correo" class="form-label"></label>
+			<input asp-for="Correo" class="form-control" />
+			<span asp-validation-for="Correo" class="text-danger"></span>
+		</div>
+		<div class="form-group mb-3">
+			<label asp-for="RolId" class="form-label"></label>
+			<select asp-for="RolId" class="form-select">
+				<option value="1" selected="@(Model.RolId == 1)">Admin</option>
+				<option value="2" selected="@(Model.RolId == 2)">Usuario</option>
+			</select>
+			<span asp-validation-for="RolId" class="text-danger"></span>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+		<button type="submit" class="btn btn-primary">Guardar Cambios</button>
+	</div>
+</form>
+

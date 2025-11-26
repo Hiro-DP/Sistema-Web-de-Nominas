@@ -2,6 +2,7 @@
 using Sistema_Web_de_Nominas.Data;
 using Sistema_Web_de_Nominas.Models;
 using Sistema_Web_de_Nominas.Repositorio;
+using System.Threading;
 
 namespace Sistema_Web_de_Nominas
 {
@@ -42,6 +43,22 @@ namespace Sistema_Web_de_Nominas
         {
             return await _context.Usuario
                 .FirstOrDefaultAsync(u => u.RecargaToken == refreshToken);
+        }
+
+        public async Task<IEnumerable<Usuario>> GetAllAsync()
+        {
+            return await _context.Usuario.ToListAsync();
+        }
+
+        public async Task<Usuario?> GetUsuarioById(int id)
+        {
+            return await _context.Usuario.FindAsync(id);
+        }
+        public async Task<Usuario> UpdateUsuario(Usuario usuario)
+        {
+            _context.Usuario.Update(usuario);
+            await _context.SaveChangesAsync();
+            return usuario;
         }
     }
 }
