@@ -14,10 +14,10 @@ namespace Sistema_Web_de_Nominas.Models
         public bool CorreoConfirmacion { get; set; }
         public string? CorreoConfirmacionToken { get; set; } = string.Empty;
         public string? RecargaToken { get; set; } = string.Empty;
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    
         public DateTime? RecargaTokenExpirado { get; set; }
         public string? ContraRecargaToken { get; set; } = string.Empty;
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+
         public DateTime? ReincioTokenExpirado { get; set; }
         public int RolId { get; set; }
         public virtual Rol Rol { get; set; }

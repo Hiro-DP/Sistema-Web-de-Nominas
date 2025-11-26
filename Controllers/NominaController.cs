@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Sistema_Web_de_Nominas.Controllers
 {
-    [Authorize(Roles = "Admin,Usuario")]
+    [Authorize(Roles = "Admin")]
     public class NominaController(INominaService nominaService, IEmpleadoService empleadoService) : Controller
     {
         private readonly INominaService _nominaService = nominaService;
