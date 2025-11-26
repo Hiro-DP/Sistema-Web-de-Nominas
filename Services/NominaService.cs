@@ -11,25 +11,8 @@ namespace Sistema_Web_de_Nominas.Services
         private readonly IEmpleadoRepository _empleadoRepository = empleadoRepository;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<NominaResponseDTO> AddNominaAsync(NominaRequestDTO nominaDto)
+        private Nomina RecalcularNomina(Nomina nominaModel)
         {
-            var nomina = _mapper.Map<Nomina>(nominaDto);
-
-            var empleado = await _empleadoRepository.GetByCedulaAsync(nomina.EmpleadoCedula);
-            if (empleado == null)
-            {
-                throw new KeyNotFoundException($"No se puede registrar la nómina: Empleado con cédula {nomina.EmpleadoCedula} no encontrado.");
-            }
-
-            await _nominaRepository.AddAsync(nomina);
-
-            return _mapper.Map<NominaResponseDTO>(nomina);
-        }
-
-        public async Task<NominaResponseDTO> CalcularYGenerarNominaAsync(NominaRequestDTO dto)
-        {
-            var nominaModel = _mapper.Map<Nomina>(dto);
-
             // --- REGLAS DE CÁLCULO (Ejemplo) ---
             const decimal TASA_INSS = 0.07m; // 7% de INSS Laboral
             const int DIAS_LABORABLES_MES = 30; // Para calcular el valor por día
@@ -58,6 +41,30 @@ namespace Sistema_Web_de_Nominas.Services
             nominaModel.SalarioNeto = nominaModel.Devengado - nominaModel.MontoDeducciones;
 
             // --- FIN DE LAS REGLAS DE CÁLCULO ---
+            return nominaModel;
+        }
+
+        public async Task<NominaResponseDTO> AddNominaAsync(NominaRequestDTO nominaDto)
+        {
+            var nomina = _mapper.Map<Nomina>(nominaDto);
+
+            var empleado = await _empleadoRepository.GetByCedulaAsync(nomina.EmpleadoCedula);
+            if (empleado == null)
+            {
+                throw new KeyNotFoundException($"No se puede registrar la nómina: Empleado con cédula {nomina.EmpleadoCedula} no encontrado.");
+            }
+
+            await _nominaRepository.AddAsync(nomina);
+
+            return _mapper.Map<NominaResponseDTO>(nomina);
+        }
+
+        public async Task<NominaResponseDTO> CalcularYGenerarNominaAsync(NominaRequestDTO dto)
+        {
+            var nominaModel = _mapper.Map<Nomina>(dto);
+
+            // APLICAR EL CÁLCULO
+            nominaModel = RecalcularNomina(nominaModel);
 
             // Guardar en la base de datos
             await _nominaRepository.AddAsync(nominaModel);
@@ -107,6 +114,8 @@ namespace Sistema_Web_de_Nominas.Services
 
             _mapper.Map(nominaDto, nominaExistente);
             nominaExistente.CodigoId = codigoId;
+
+            nominaExistente = RecalcularNomina(nominaExistente);
 
             await _nominaRepository.UpdateAsync(nominaExistente);
 
