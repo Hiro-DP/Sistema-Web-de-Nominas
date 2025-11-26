@@ -22,6 +22,13 @@
                     <th>ID</th>
                     <th>Cédula Empleado</th>
                     <th>Salario Base</th>
+                    <th>H. Extras</th>
+                    <th>Monto H. Extras</th>
+                    <th>Devengado</th>
+                    <th>INSS Laboral</th>
+                    <th>Inasistencia (Días)</th>
+                    <th>Monto Deducciones</th>
+                    <th>Salario Neto</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -32,6 +39,14 @@
                         <td>@nomina.CodigoId</td>
                         <td>@nomina.EmpleadoCedula</td>
                         <td>@nomina.Salario.ToString("C")</td>
+
+                        <td>@nomina.HorasExtras</td>
+                        <td>@nomina.MontoDeHorasExtras.ToString("C")</td>
+                        <td>@nomina.Devengado.ToString("C")</td>
+                        <td>@nomina.INSSLaboral.ToString("C")</td>
+                        <td>@nomina.Inasistencia</td>
+                        <td>@nomina.MontoDeducciones.ToString("C")</td>
+                        <td>@nomina.SalarioNeto.ToString("C")</td>
 
                         <td>
                             @if (User.IsInRole("Admin"))

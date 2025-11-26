@@ -26,52 +26,44 @@ namespace Sistema_Web_de_Nominas.Services
             return _mapper.Map<NominaResponseDTO>(nomina);
         }
 
-        public async Task<NominaResponseDTO> CalcularYGenerarNominaAsync(string empleadoCedula, decimal salarioBase)
+        public async Task<NominaResponseDTO> CalcularYGenerarNominaAsync(NominaRequestDTO dto)
         {
-            // 1. Obtener datos del Empleado (solo para validación)
-            var empleado = await _empleadoRepository.GetByCedulaAsync(empleadoCedula);
-            if (empleado == null)
-            {
-                throw new KeyNotFoundException($"Empleado con cédula {empleadoCedula} no encontrado.");
-            }
+            var nominaModel = _mapper.Map<Nomina>(dto);
 
-            // 2. Lógica de Cálculo (Ajustada a propiedades existentes y salario externo)
+            // --- REGLAS DE CÁLCULO (Ejemplo) ---
+            const decimal TASA_INSS = 0.07m; // 7% de INSS Laboral
+            const int DIAS_LABORABLES_MES = 30; // Para calcular el valor por día
 
-            // ** Cálculo de Deducciones **
-            decimal deduccionImpuesto = salarioBase * 0.10M;
-            decimal deduccionINSS = salarioBase * 0.07M;
-            decimal totalDeducciones = deduccionImpuesto + deduccionINSS;
+            // 1. Cálculo de Monto por Horas Extras
+            // Suponiendo que el valor de la hora extra es 1.5 veces la hora normal
+            decimal salarioPorHora = nominaModel.Salario / DIAS_LABORABLES_MES / 8;
+            decimal valorHoraExtra = salarioPorHora * 1.5m;
+            nominaModel.MontoDeHorasExtras = valorHoraExtra * (decimal)nominaModel.HorasExtras;
 
-            // ** Cálculo de Devengado (Salario Bruto) **
-            decimal devengadoTotal = salarioBase;
+            // 2. Cálculo del Devengado (Salario Base + Horas Extras)
+            nominaModel.Devengado = nominaModel.Salario + nominaModel.MontoDeHorasExtras;
 
-            // ** Cálculo de Salario Neto **
-            decimal salarioNetoCalculado = devengadoTotal - totalDeducciones;
+            // 3. Cálculo de Deducciones
+            // a) Deducción por INSS sobre el devengado
+            nominaModel.INSSLaboral = nominaModel.Devengado * TASA_INSS;
 
-            // 3. Crear el Modelo de Nomina (Modelo de BD)
-            var nuevaNomina = new Nomina
-            {
-                EmpleadoCedula = empleado.Cedula,
+            // b) Deducción por Inasistencia
+            decimal valorDia = nominaModel.Salario / DIAS_LABORABLES_MES;
+            decimal deduccionInasistencia = valorDia * nominaModel.Inasistencia;
 
-                
-                Salario = salarioBase, // Use la propiedad Salario como el Salario Base
-                Devengado = devengadoTotal, // Salario Bruto
-                INSSLaboral = deduccionINSS,
-                MontoDeducciones = totalDeducciones, // Total de deducciones
-                SalarioNeto = salarioNetoCalculado,
+            // c) Suma de todas las deducciones
+            nominaModel.MontoDeducciones = nominaModel.INSSLaboral + deduccionInasistencia;
 
-                // Propiedades requeridas por la BD que deben inicializarse
-                HorasExtras = 0,
-                MontoDeHorasExtras = 0,
-                Inasistencia = 0
+            // 4. Cálculo del Salario Neto
+            nominaModel.SalarioNeto = nominaModel.Devengado - nominaModel.MontoDeducciones;
 
-            };
+            // --- FIN DE LAS REGLAS DE CÁLCULO ---
 
-            // 4. Persistir
-            await _nominaRepository.AddAsync(nuevaNomina);
+            // Guardar en la base de datos
+            await _nominaRepository.AddAsync(nominaModel);
 
-            // 5. Mapear a DTO de Respuesta
-            return _mapper.Map<NominaResponseDTO>(nuevaNomina);
+            // Devolver el resultado
+            return _mapper.Map<NominaResponseDTO>(nominaModel);
         }
 
         public async Task DeleteNominaAsync(int codigoId)

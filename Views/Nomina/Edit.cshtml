@@ -3,7 +3,7 @@
 @{
 	Layout = null;
 	var empleados = ViewBag.Empleados as IEnumerable<EmpleadoResponseDTO> ?? new List<EmpleadoResponseDTO>();
-	int codigoId = (int)ViewData["CodigoId"];
+	int codigoId = (ViewData["CodigoId"] as int?) ?? 0;
 }
 
 <form id="crudForm" data-action="Edit">

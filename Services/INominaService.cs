@@ -10,7 +10,7 @@ namespace Sistema_Web_de_Nominas.Services
         Task<NominaResponseDTO> UpdateNominaAsync(int codigoId, NominaRequestDTO nominaDto);
         Task DeleteNominaAsync(int codigoId);
 
-        Task<NominaResponseDTO> CalcularYGenerarNominaAsync(string empleadoCedula, decimal salarioBase);
+        Task<NominaResponseDTO> CalcularYGenerarNominaAsync(NominaRequestDTO dto);
         Task<IEnumerable<NominaResponseDTO>> GetNominasPorEmpleadoAsync(string empleadoCedula);
     }
 }

@@ -77,7 +77,8 @@ namespace Sistema_Web_de_Nominas.Controllers
 
             try
             {
-                var nominaGenerada = await _nominaService.CalcularYGenerarNominaAsync(dto.EmpleadoCedula, dto.Salario);
+                var nominaGenerada = await _nominaService.CalcularYGenerarNominaAsync(dto); // <-- Cambiado
+
                 return Ok(nominaGenerada);
             }
             catch (KeyNotFoundException ex)

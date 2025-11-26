@@ -136,7 +136,7 @@ async function bindFormHandler() {
         errorLabelCssClass: 'text-danger',
     });
 
-    //  Lógica y Validación Específica 
+    //  Lógica y Validación Específica  
 
     if (controller.toLowerCase() === 'empleado') {
         const cedula = form.querySelector('[name="Cedula"]').value;
@@ -194,6 +194,14 @@ async function bindFormHandler() {
 
         const disabledCedula = form.querySelector('[name="Cedula"][disabled]');
         if (disabledCedula) data.Cedula = disabledCedula.value;
+
+        
+        if (controller.toLowerCase() === 'nomina') {
+            data.Salario = parseFloat(data.Salario || 0);
+            data.HorasExtras = parseFloat(data.HorasExtras || 0);
+
+            data.Inasistencia = parseInt(data.Inasistencia || 0);
+        }
 
         try {
             const response = await axios.post(url, JSON.stringify(data), {
