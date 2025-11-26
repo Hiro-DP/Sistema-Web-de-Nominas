@@ -102,6 +102,7 @@ namespace Sistema_Web_de_Nominas.Controllers
             }
             var editDto = new NominaRequestDTO
             {
+                CodigoId = nomina.CodigoId,
                 Salario = nomina.Salario,
                 HorasExtras = nomina.HorasExtras,
                 Inasistencia = nomina.Inasistencia,
