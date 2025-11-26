@@ -104,16 +104,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 errorMessage: 'Las contraseñas no coinciden'
             }
         ])
-        //.addField('#UserRole', [
-        //    { rule: 'required', errorMessage: 'Seleccione un rol' }
-        //])
+        .addField('#UserRole', [
+            { rule: 'required', errorMessage: 'Seleccione un rol' }
+        ])
         .onSuccess(async (event) => {
             event.preventDefault();
 
             const data = {
                 NombreUsuario: document.getElementById("UserName").value,
                 Correo: document.getElementById("registerEmail").value,
-                Contra: document.getElementById("registerPassword").value
+                Contra: document.getElementById("registerPassword").value,
+                RolId: document.getElementById("UserRole").value
             };
 
             try {

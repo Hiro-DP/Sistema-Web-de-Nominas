@@ -176,6 +176,10 @@ namespace Sistema_Web_de_Nominas.Services
                 return false;
             }
 
+            Console.WriteLine("TOKEN GUARDADO   : " + storedToken);
+            Console.WriteLine("TOKEN RECIBIDO   : " + providedToken);
+            Console.WriteLine("COINCIDEN?       : " + storedToken.Equals(providedToken, StringComparison.Ordinal));
+
             // Verificar expiración
             if (!user.ReincioTokenExpirado.HasValue || user.ReincioTokenExpirado.Value < DateTime.Now)
             {

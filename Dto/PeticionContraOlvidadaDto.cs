@@ -2,7 +2,6 @@
 {
     public class PeticionContraOlvidadaDto
     {
-        public string Correo { get; set; } = string.Empty;
-
+        public string Correo { get; set; } = null!;
     }
 }

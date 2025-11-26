@@ -10,6 +10,11 @@ namespace Sistema_Web_de_Nominas.Controllers
     {
         private readonly IAuthService _authService = authService;
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -96,8 +101,10 @@ namespace Sistema_Web_de_Nominas.Controllers
         }
 
         //RECUPERAR CONTRASEÑA
+
         [HttpGet]
         public IActionResult ForgotPassword() => View();
+
         //Primer paso para hacer la recuperacion por olvidar password
         [HttpPost]
         public async Task<IActionResult> ForgotPassword([FromBody] PeticionContraOlvidadaDto model)
@@ -118,7 +125,8 @@ namespace Sistema_Web_de_Nominas.Controllers
                 return NotFound(new { success = false, errorMessage = "Correo no encontrado." });
             }
         }
-        //REINICIAR CONTRASEÑA
+
+        // ========== RESET CONTRASEÑA ==========
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ResetPassword(string email, string token)
@@ -126,46 +134,53 @@ namespace Sistema_Web_de_Nominas.Controllers
             var model = new PeticionReinicioContraDto { Correo = email, Token = token };
             return View(model);
         }
+
+        //Segundo paso para resetear el password
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> ResetPassword([FromBody] PeticionReinicioContraDto dto)
         {
             if (!ModelState.IsValid)
-            {
                 return View(dto);
-            }
+
             var success = await _authService.ResetPasswordAsync(dto);
             if (success)
             {
+
                 return Ok(new { success = true });
             }
-            ModelState.AddModelError("", "Token invalido o expirado");
+
+            ModelState.AddModelError("", "Token inválido o expirado.");
             return View(dto);
         }
-        //CAMBIO CONTRASEÑA
+
+        // ========== CAMBIO DE CONTRASEÑA ==========
         [Authorize]
         [HttpGet]
         public IActionResult ChangePassword() => View();
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChangePassword(CambiarContraDto dto)
         {
             if (!ModelState.IsValid)
-            {
                 return View(dto);
-            }
 
-            var username = User.Identity?.Name;
+            var username = User.Identity?.Name!;
             var success = await _authService.ChangePasswordAsync(username, dto);
             if (success)
             {
-                TempData["Success"] = "Contraseña actualizada correctamente";
+                TempData["Success"] = "Contraseña actualizada correctamente.";
                 return RedirectToAction("Logout");
             }
 
-            ModelState.AddModelError("", "Contraseña actual incorrecta");
+            ModelState.AddModelError("", "Contraseña actual incorrecta.");
             return View(dto);
         }
+
+
+
+
         [HttpPost]
         public async Task<IActionResult> RefreshToken()
         {
