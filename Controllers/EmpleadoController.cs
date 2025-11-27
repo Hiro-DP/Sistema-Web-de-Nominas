@@ -12,7 +12,7 @@ namespace Sistema_Web_de_Nominas.Controllers
 
     {
         private readonly IEmpleadoService _empleadoService = empleadoService;
-        private readonly IAuthService _usuarioService = usuarioService; // Asignar el servicio de usuarios
+        private readonly IAuthService _usuarioService = usuarioService;
 
         [Authorize]
 

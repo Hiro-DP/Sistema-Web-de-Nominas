@@ -13,34 +13,24 @@ namespace Sistema_Web_de_Nominas.Services
 
         private Nomina RecalcularNomina(Nomina nominaModel)
         {
-            // --- REGLAS DE CÁLCULO (Ejemplo) ---
-            const decimal TASA_INSS = 0.07m; // 7% de INSS Laboral
-            const int DIAS_LABORABLES_MES = 30; // Para calcular el valor por día
+            const decimal TASA_INSS = 0.07m; 
+            const int DIAS_LABORABLES_MES = 30; 
 
-            // 1. Cálculo de Monto por Horas Extras
-            // Suponiendo que el valor de la hora extra es 1.5 veces la hora normal
             decimal salarioPorHora = nominaModel.Salario / DIAS_LABORABLES_MES / 8;
             decimal valorHoraExtra = salarioPorHora * 1.5m;
             nominaModel.MontoDeHorasExtras = valorHoraExtra * (decimal)nominaModel.HorasExtras;
 
-            // 2. Cálculo del Devengado (Salario Base + Horas Extras)
             nominaModel.Devengado = nominaModel.Salario + nominaModel.MontoDeHorasExtras;
 
-            // 3. Cálculo de Deducciones
-            // a) Deducción por INSS sobre el devengado
             nominaModel.INSSLaboral = nominaModel.Devengado * TASA_INSS;
 
-            // b) Deducción por Inasistencia
             decimal valorDia = nominaModel.Salario / DIAS_LABORABLES_MES;
             decimal deduccionInasistencia = valorDia * nominaModel.Inasistencia;
 
-            // c) Suma de todas las deducciones
             nominaModel.MontoDeducciones = nominaModel.INSSLaboral + deduccionInasistencia;
 
-            // 4. Cálculo del Salario Neto
             nominaModel.SalarioNeto = nominaModel.Devengado - nominaModel.MontoDeducciones;
 
-            // --- FIN DE LAS REGLAS DE CÁLCULO ---
             return nominaModel;
         }
 
