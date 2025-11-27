@@ -6,9 +6,12 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>@ViewData["Title"]</h2>
-        <button type="button" class="btn btn-primary" onclick="OpenModal('/Empleado/Create')">
-            <i class="bi bi-plus-circle"></i> Nuevo Empleado
-        </button>
+        @if (User.IsInRole("Admin"))
+        {
+            <button type="button" class="btn btn-success" onclick="OpenModal('/Nomina/Create')">
+                <i class="bi bi-cash-stack"></i> Nueva empleado
+            </button>
+        }
     </div>
 
     <div class="table-responsive">
@@ -19,7 +22,11 @@
                     <th>Nombre Completo</th>
                     <th>Teléfono</th>
                     <th>Cargo</th>
-                    <th>Acciones</th>
+                    <th>Usuario Id</th>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th>Acciones</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -30,14 +37,20 @@
                         <td>@empleado.NombreCompleto</td>
                         <td>@empleado.Telefono</td>
                         <td>@empleado.Cargo</td>
-                        <td>
-                            <a onclick="OpenModal('/Empleado/Edit?cedula=@empleado.Cedula')" class="btn btn-warning btn-sm mx-1">
-                                <i class="fa fa-pencil"></i> Editar
-                            </a>
-                            <button class="btn btn-danger btn-sm" onclick="eliminarEmpleado('@empleado.Cedula')">
-                                <i class="fa fa-trash"></i> Eliminar
-                            </button>
-                        </td>
+                        <td>@empleado.UsuarioId</td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td>
+
+                                <a onclick="OpenModal('/Empleado/Edit?cedula=@empleado.Cedula')" class="btn btn-warning btn-sm mx-1">
+                                    <i class="fa fa-pencil"></i> Editar
+                                </a>
+                                <button class="btn btn-danger btn-sm" onclick="eliminarEmpleado('@empleado.Cedula')">
+                                    <i class="fa fa-trash"></i> Eliminar
+                                </button>
+
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>

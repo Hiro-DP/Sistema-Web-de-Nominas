@@ -29,7 +29,10 @@
                     <th>Inasistencia (Días)</th>
                     <th>Monto Deducciones</th>
                     <th>Salario Neto</th>
-                    <th>Acciones</th>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <th>Acciones</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -47,18 +50,19 @@
                         <td>@nomina.Inasistencia</td>
                         <td>@nomina.MontoDeducciones.ToString("C")</td>
                         <td>@nomina.SalarioNeto.ToString("C")</td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td>
 
-                        <td>
-                            @if (User.IsInRole("Admin"))
-                            {
                                 <a onclick="OpenModal('/Nomina/Edit?codigoId=@nomina.CodigoId')" class="btn btn-warning btn-sm mx-1">
                                     <i class="fa fa-pencil"></i> Editar
                                 </a>
                                 <button class="btn btn-danger btn-sm" onclick="eliminarNomina(@nomina.CodigoId)">
                                     <i class="fa fa-trash"></i> Eliminar
                                 </button>
-                            }
+                            
                         </td>
+                        }
                     </tr>
                 }
             </tbody>

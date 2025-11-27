@@ -8,18 +8,19 @@ using System.Threading.Tasks;
 
 namespace Sistema_Web_de_Nominas.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class NominaController(INominaService nominaService, IEmpleadoService empleadoService) : Controller
     {
         private readonly INominaService _nominaService = nominaService;
         private readonly IEmpleadoService _empleadoService = empleadoService;
+        [Authorize]
+        public async Task<IActionResult> Index()
+        {
+             var nominas = await _nominaService.GetAllNominasAsync();
+             return View(nominas);
+        }
 
-        // public async Task<IActionResult> Index()
-        //{
-        //     var nominas = await _nominaService.GetAllNominasAsync();
-        //     return View(nominas);
-        // }
-
+    
+        /*
         public async Task<IActionResult> Index()
         {
             var esAdmin = User.IsInRole("Admin");
@@ -52,7 +53,7 @@ namespace Sistema_Web_de_Nominas.Controllers
 
             return View(nominas);
         }
-
+        */
         [HttpGet]
         public async Task<IActionResult> Details(int codigoId)
         {

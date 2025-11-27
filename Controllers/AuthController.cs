@@ -14,7 +14,7 @@ namespace Sistema_Web_de_Nominas.Controllers
         //PONER PARA EL EDIT
         private readonly IAuthService _authService = authService;
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var usuarios = await _authService.GetAllUsuariosAsync();

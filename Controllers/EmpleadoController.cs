@@ -8,12 +8,13 @@ using System.Threading.Tasks;
 
 namespace Sistema_Web_de_Nominas.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class EmpleadoController(IEmpleadoService empleadoService, IAuthService usuarioService) : Controller
 
     {
         private readonly IEmpleadoService _empleadoService = empleadoService;
         private readonly IAuthService _usuarioService = usuarioService; // Asignar el servicio de usuarios
+
+        [Authorize]
 
         public async Task<IActionResult> Index()
         {
@@ -39,6 +40,7 @@ namespace Sistema_Web_de_Nominas.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] EmpleadoRequestDTO empleadoDto)
         {
@@ -66,6 +68,8 @@ namespace Sistema_Web_de_Nominas.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
+
         [HttpGet]
         public async Task<IActionResult> Edit(string cedula)
         {
@@ -89,6 +93,8 @@ namespace Sistema_Web_de_Nominas.Controllers
 
             return View(editDto);
         }
+        [Authorize(Roles = "Admin")]
+
 
         [HttpPost]
         public async Task<IActionResult> Edit(string cedula, [FromBody] EmpleadoRequestDTO empleadoDto)
@@ -116,6 +122,8 @@ namespace Sistema_Web_de_Nominas.Controllers
                 return StatusCode(500, new { error = "Error al actualizar el empleado", detalle = ex.Message });
             }
         }
+        [Authorize(Roles = "Admin")]
+
 
         [HttpPost]
         public async Task<IActionResult> Delete(string cedula)
