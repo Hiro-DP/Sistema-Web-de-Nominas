@@ -29,7 +29,8 @@ namespace Sistema_Web_de_Nominas.Models
 
         public virtual ICollection<Nomina> Nominas { get; set; } = new List<Nomina>();
 
+        public int? UsuarioId { get; set; }
         public virtual Usuario? Usuario { get; set; }
 
-        }
+    }
 }
